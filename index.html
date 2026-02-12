@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Deep Horizons | Future Tech News</title>
     
-    <meta name="description" content="Deep Horizons - All new technology news for free. Deep dive into the future.">
+    <meta name="description" content="Deep Horizons - The source for future technology. All news for free.">
+    <meta name="keywords" content="Technology, AI, Future, News, Deep Horizons">
     <meta name="robots" content="index, follow">
     
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script>
@@ -14,174 +15,180 @@
         :root {
             --primary-black: #000000;
             --bg-gray: #fcfcfc;
-            --accent-gray: #e0e0e0;
             --text-main: #1a1a1a;
+            --border-color: #000000;
         }
 
         body { 
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; 
+            font-family: 'Inter', -apple-system, system-ui, sans-serif; 
             margin: 0; background-color: var(--bg-gray); color: var(--text-main);
+            line-height: 1.6;
         }
 
-        /* Header */
+        /* Header Estilo Portal */
         header { background-color: var(--primary-black); color: white; padding: 70px 20px; text-align: center; }
-        header h1 { margin: 0; font-size: 3.5rem; text-transform: uppercase; letter-spacing: 7px; font-weight: 900; }
-        header p { margin: 10px 0 0; font-size: 1.1rem; font-weight: 300; letter-spacing: 2px; color: #888; }
+        header h1 { margin: 0; font-size: 3.5rem; text-transform: uppercase; letter-spacing: 8px; font-weight: 900; }
+        header p { margin: 10px 0 0; font-size: 1.1rem; font-weight: 300; color: #999; letter-spacing: 2px; }
 
-        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+        .container { max-width: 850px; margin: 0 auto; padding: 20px; }
 
-        /* Espaço para Propaganda (Ads) */
+        /* ESPAÇOS PARA PROPAGANDAS */
         .ad-space {
-            margin: 20px auto;
-            background: #eee;
-            border: 1px dashed #bbb;
-            text-align: center;
-            padding: 15px;
-            font-size: 0.7rem;
-            color: #999;
-            text-transform: uppercase;
-            max-width: 728px;
-            min-height: 90px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            margin: 25px auto; background: #f0f0f0; border: 1px dashed #ccc;
+            text-align: center; padding: 20px; font-size: 0.75rem; color: #aaa;
+            text-transform: uppercase; min-height: 90px; display: flex; align-items: center; justify-content: center;
         }
 
-        /* Login Integrado */
+        /* Seção de Login */
         #login-section {
-            background: white; padding: 50px; border: 1px solid #000;
-            text-align: center; margin: 40px auto; box-shadow: 15px 15px 0px #000;
+            background: white; padding: 60px; border: 3px solid var(--border-color);
+            text-align: center; margin: 50px auto; box-shadow: 15px 15px 0px #000;
         }
-        #user-name-input { 
-            width: 100%; padding: 15px; border: 1px solid #ddd; 
-            font-size: 1rem; margin-bottom: 20px; outline: none;
-        }
+        #login-section h2 { margin-top: 0; font-size: 1.8rem; text-transform: uppercase; }
 
-        /* Painel Admin */
+        /* Painel Admin (Sempre oculto por padrão) */
         #admin-panel { 
-            display: none; background: white; padding: 40px; border: 1px solid #000;
-            margin-bottom: 50px; box-shadow: 15px 15px 0px #000;
+            display: none; background: white; padding: 45px; border: 3px solid var(--border-color);
+            margin-bottom: 60px; box-shadow: 15px 15px 0px #000;
         }
         .form-group { margin-bottom: 25px; }
-        .form-group label { display: block; font-weight: bold; margin-bottom: 10px; font-size: 0.8rem; letter-spacing: 1px;}
-        input, textarea { width: 100%; padding: 15px; border: 1px solid #eee; background: #fafafa; font-size: 1rem; box-sizing: border-box; }
+        label { display: block; font-weight: 800; margin-bottom: 10px; font-size: 0.85rem; text-transform: uppercase; }
+        input, textarea { width: 100%; padding: 18px; border: 1px solid #ddd; font-size: 1rem; box-sizing: border-box; background: #fafafa; }
         
         button { 
-            background: black; color: white; border: none; padding: 20px; 
+            background: black; color: white; border: none; padding: 22px; 
             cursor: pointer; font-weight: bold; width: 100%; text-transform: uppercase; 
-            letter-spacing: 2px; transition: background 0.3s;
+            letter-spacing: 2px; transition: 0.3s; font-size: 1rem;
         }
-        button:hover { background: #333; }
+        button:hover { background: #333; transform: scale(1.01); }
+        .google-btn { background: #4285F4; margin-top: 15px; }
+        .google-btn:hover { background: #357abd; }
 
-        /* Blog Card */
-        .blog-card { background: white; margin-bottom: 80px; position: relative; }
-        .blog-content h3 { margin: 0; font-size: 2.8rem; line-height: 1; letter-spacing: -1px; }
-        .post-date { display: block; margin: 15px 0 30px 0; color: #999; font-size: 0.85rem; font-weight: bold; }
-        .blog-content p { font-size: 1.25rem; line-height: 1.7; color: #333; }
-        .post-image-footer { margin-top: 30px; border-top: 1px solid #f0f0f0; padding-top: 30px; }
-        .post-image-footer img { max-width: 100%; height: auto; display: block; margin: 0 auto; }
+        /* Estilo dos Posts */
+        .blog-card { background: white; margin-bottom: 80px; padding-bottom: 50px; border-bottom: 2px solid #eee; }
+        .blog-content h3 { margin: 0; font-size: 3rem; line-height: 1.1; font-weight: 900; letter-spacing: -1px; }
+        .post-date { display: block; margin: 15px 0 30px 0; color: #bbb; font-size: 0.9rem; font-weight: bold; text-transform: uppercase; }
+        .blog-content p { font-size: 1.3rem; color: #333; white-space: pre-wrap; margin-bottom: 30px; }
+        
+        .post-image-footer { margin-top: 40px; }
+        .post-image-footer img { max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 15px 40px rgba(0,0,0,0.12); }
 
+        /* Botão de Paginação */
         #load-more { 
-            display: none; text-align: center; padding: 20px; border: 2px solid black;
-            font-weight: bold; cursor: pointer; text-transform: uppercase; margin-top: 50px;
+            display: none; text-align: center; padding: 25px; border: 3px solid black;
+            font-weight: 900; cursor: pointer; text-transform: uppercase; margin: 50px 0;
+            letter-spacing: 3px; background: white;
         }
+        #load-more:hover { background: black; color: white; }
     </style>
 </head>
 <body>
 
     <header>
         <h1>Deep Horizons</h1>
-        <p>All new technology news for free</p>
+        <p>Advanced Technology Portal</p>
     </header>
 
     <div class="ad-space">
-        Advertisement Space - Top Banner
+        Google Ads Space - Billboard Banner
     </div>
 
     <div class="container">
         <section id="login-section">
-            <h2 style="letter-spacing: 2px; text-transform: uppercase;">Portal Identity</h2>
-            <input type="text" id="user-name-input" maxlength="100" placeholder="Identity name">
-            <button onclick="handleLogin()">Authorize Access</button>
+            <h2>Portal Access</h2>
+            <p>Authorized personnel only. Authenticate to sync the technology feed.</p>
+            <button class="google-btn" onclick="handleLogin()">Sign in with Google</button>
         </section>
 
         <div id="admin-panel">
-            <h2 style="margin-top:0">System Update</h2>
+            <h2 style="margin-top:0; text-transform: uppercase;">Admin Terminal</h2>
             <div class="form-group">
                 <label>Headline</label>
-                <input type="text" id="post-title" placeholder="Main title">
+                <input type="text" id="post-title" placeholder="News title...">
             </div>
             <div class="form-group">
                 <label>Media Asset (URL)</label>
-                <input type="text" id="post-image" placeholder="Image link">
+                <input type="text" id="post-image" placeholder="Image link (Optional)">
             </div>
             <div class="form-group">
-                <label>Article Core</label>
-                <textarea id="post-body" rows="12" placeholder="Write content..."></textarea>
+                <label>Content</label>
+                <textarea id="post-body" rows="12" placeholder="Write article..."></textarea>
             </div>
-            <button onclick="createPost()">Commit Post</button>
+            <button onclick="createPost()">Deploy Publication</button>
         </div>
 
         <div id="main-content" style="display: none;">
             <div id="blog-feed"></div>
             
             <div class="ad-space">
-                Advertisement Space - In-Feed Ad
+                Google Ads Space - In-Feed Banner
             </div>
 
-            <div id="load-more">Explore More Archives</div>
+            <div id="load-more">Load Archive Data</div>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getFirestore, collection, addDoc, query, orderBy, limit, getDocs, startAfter } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-        // CONFIGURAÇÃO FIREBASE
+        // CONFIGURAÇÃO DO SEU FIREBASE
         const firebaseConfig = {
             apiKey: "AIzaSyALHh2CFuSSWI2MR6RyiqRZZf4ABnp9Zyo",
-            authDomain: "deep-horizons-51171.firebaseapp.com",
-            projectId: "deep-horizons-51171",
-            storageBucket: "deep-horizons-51171.firebasestorage.app",
-            messagingSenderId: "670734932259",
-            appId: "G-TPLB1K4SEY"
-        };
+
+  authDomain: "deep-horizons-51171.firebaseapp.com",
+  projectId: "deep-horizons-51171",
+  storageBucket: "deep-horizons-51171.firebasestorage.app",
+  messagingSenderId: "670734932259",
+  appId: "1:670734932259:web:07dab3af4aefb077221496",
+  measurementId: "G-TPLB1K4SEY"
+};
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
 
         let lastVisiblePost = null;
-        let activeUser = "";
 
-        window.handleLogin = () => {
-            const input = document.getElementById('user-name-input').value.trim();
-            if (!input) return;
-
-            activeUser = input;
-            document.getElementById('login-section').style.display = 'none';
-            document.getElementById('main-content').style.display = 'block';
-
-            if (activeUser === "ASDERTYUGDNJ") {
-                document.getElementById('admin-panel').style.display = 'block';
-            }
-            loadPosts();
+        // Login System
+        window.handleLogin = async () => {
+            try { await signInWithPopup(auth, provider); } 
+            catch (error) { alert("Login failed."); }
         };
 
+        // Auth Monitor
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                document.getElementById('login-section').style.display = 'none';
+                document.getElementById('main-content').style.display = 'block';
+                
+                // SEGURANÇA: TROQUE PELO SEU E-MAIL
+                if (user.email === "campameurer@gmail.com") {
+                    document.getElementById('admin-panel').style.display = 'block';
+                }
+                loadPosts();
+            }
+        });
+
+        // Create Post
         window.createPost = async () => {
             const title = document.getElementById('post-title').value;
             const img = document.getElementById('post-image').value;
             const body = document.getElementById('post-body').value;
 
-            if (!title || !body) return alert("Fields missing.");
+            if (!title || !body) return alert("Fill mandatory fields!");
 
             try {
                 await addDoc(collection(db, "posts"), {
-                    title, image: img, content: body, date: new Date(), admin_code: activeUser
+                    title, image: img, content: body, date: new Date()
                 });
                 location.reload();
-            } catch (e) { alert("Error."); }
+            } catch (e) { alert("Access Denied."); }
         };
 
+        // Load Posts (Paginação)
         async function loadPosts(isNextPage = false) {
             let q = query(collection(db, "posts"), orderBy("date", "desc"), limit(5));
             if (isNextPage && lastVisiblePost) {
@@ -206,7 +213,7 @@
                     <article class="blog-card">
                         <div class="blog-content">
                             <h3>${p.title}</h3>
-                            <span class="post-date">${d}</span>
+                            <span class="post-date">System Update: ${d}</span>
                             <p>${p.content}</p>
                             ${media}
                         </div>
