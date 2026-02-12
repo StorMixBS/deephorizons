@@ -5,20 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Deep Horizons | Future Tech News</title>
     
-    <meta name="description" content="Deep Horizons - Advanced technology intelligence and news.">
-    <meta name="robots" content="index, follow">
-
     <style>
         :root { --primary-black: #000000; --bg-gray: #fcfcfc; --text-main: #1a1a1a; }
-        body { 
-            font-family: 'Inter', sans-serif; margin: 0; background-color: var(--bg-gray); 
-            color: var(--text-main); line-height: 1.6; display: flex; flex-direction: column; min-height: 100vh;
-        }
+        body { font-family: 'Inter', sans-serif; margin: 0; background-color: var(--bg-gray); color: var(--text-main); line-height: 1.6; display: flex; flex-direction: column; min-height: 100vh; }
         
-        /* Nav Bar */
         nav { background: #000; padding: 10px 20px; display: flex; justify-content: flex-end; align-items: center; }
-        #login-btn { background: #4285F4; color: white; border: none; padding: 8px 15px; cursor: pointer; font-weight: bold; border-radius: 4px; font-size: 0.8rem; transition: 0.3s; }
-        #login-btn:hover { background: #357abd; }
+        #login-btn { background: #4285F4; color: white; border: none; padding: 8px 15px; cursor: pointer; font-weight: bold; border-radius: 4px; font-size: 0.8rem; }
         #user-info { color: white; font-size: 0.8rem; margin-right: 10px; display: none; }
 
         header { background-color: var(--primary-black); color: white; padding: 50px 20px; text-align: center; }
@@ -27,21 +19,35 @@
         
         .container { max-width: 850px; margin: 0 auto; padding: 20px; flex: 1; }
 
-        /* Painel Admin Oculto */
+        /* Painel Admin */
         #admin-panel { display: none; background: #fff; padding: 30px; border: 3px solid #000; margin: 40px 0; box-shadow: 10px 10px 0px #000; }
-        #admin-panel input, #admin-panel textarea { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; box-sizing: border-box; }
+        #admin-panel input, #admin-panel textarea { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; box-sizing: border-box; font-family: inherit; }
         .publish-btn { background: black; color: white; border: none; padding: 15px; cursor: pointer; width: 100%; font-weight: bold; text-transform: uppercase; }
 
-        /* Feed */
-        .blog-card { background: white; margin-bottom: 60px; padding-bottom: 40px; border-bottom: 1px solid #eee; }
-        .blog-content h3 { margin: 0; font-size: 2.5rem; line-height: 1.1; font-weight: 900; }
-        .post-date { display: block; margin: 10px 0 20px 0; color: #bbb; font-size: 0.8rem; font-weight: bold; text-transform: uppercase; }
-        .post-image-footer img { max-width: 100%; height: auto; border-radius: 8px; margin-top: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        /* Estilo dos Cards de Notícia (Clickable) */
+        .blog-card { 
+            background: white; margin-bottom: 30px; border: 1px solid #eee; 
+            cursor: pointer; transition: 0.2s; position: relative; overflow: hidden;
+            border-radius: 8px;
+        }
+        .blog-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
         
-        #load-more { display: block; text-align: center; padding: 20px; border: 2px solid black; font-weight: 900; cursor: pointer; margin: 40px 0; background: white; text-transform: uppercase; }
+        .card-header { padding: 25px; }
+        .card-header h3 { margin: 0; font-size: 2rem; line-height: 1.2; font-weight: 900; color: #000; }
+        
+        .card-image img { width: 100%; height: 400px; object-fit: cover; display: block; }
 
-        /* Rodapé */
-        footer { background-color: #000; color: #fff; text-align: center; padding: 40px 20px; font-size: 0.9rem; letter-spacing: 1px; }
+        /* Conteúdo Expandido (Respeita Parágrafos) */
+        .card-content { 
+            display: none; padding: 25px; border-top: 1px solid #eee; 
+            background: #fff;
+            white-space: pre-wrap; 
+            font-size: 1.15rem; color: #333;
+        }
+        
+        .post-date { display: block; margin-top: 10px; color: #bbb; font-size: 0.75rem; text-transform: uppercase; font-weight: bold; }
+        
+        footer { background-color: #000; color: #fff; text-align: center; padding: 40px 20px; font-size: 0.9rem; letter-spacing: 1px; margin-top: 50px; }
     </style>
 </head>
 <body>
@@ -61,13 +67,13 @@
             <h2 style="margin-top:0">Novo Post</h2>
             <input type="text" id="post-title" placeholder="Título da Notícia">
             <input type="text" id="post-image" placeholder="Link da Imagem (URL)">
-            <textarea id="post-body" rows="8" placeholder="Conteúdo da notícia..."></textarea>
+            <textarea id="post-body" rows="10" placeholder="Conteúdo da notícia (Dê parágrafos normalmente)..."></textarea>
             <button class="publish-btn" onclick="createPost()">Publicar Agora</button>
         </div>
 
         <div id="blog-feed"></div>
         
-        <div id="load-more" onclick="loadPosts(true)">Carregar Mais Antigas</div>
+        <button id="load-more" style="display:none; width:100%; padding:15px; margin:20px 0; border: 2px solid black; background: white; font-weight: bold; cursor: pointer;" onclick="loadPosts(true)">VER MAIS NOTÍCIAS</button>
     </div>
 
     <footer>
@@ -79,10 +85,8 @@
         import { getFirestore, collection, addDoc, query, orderBy, limit, getDocs, startAfter } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-        // CONFIGURAÇÃO FIREBASE (SUBSTITUA PELOS SEUS DADOS)
         const firebaseConfig = {
-            apiKey: "AIzaSyALHh2CFuSSWI2MR6RyiqRZZf4ABnp9Zyo",
-
+  apiKey: "AIzaSyALHh2CFuSSWI2MR6RyiqRZZf4ABnp9Zyo",
   authDomain: "deep-horizons-51171.firebaseapp.com",
   projectId: "deep-horizons-51171",
   storageBucket: "deep-horizons-51171.firebasestorage.app",
@@ -98,12 +102,7 @@
         let lastVisiblePost = null;
 
         window.handleLogin = async () => {
-            try {
-                await signInWithPopup(auth, provider);
-            } catch (e) {
-                console.error(e);
-                alert("Verifique os Domínios Autorizados no Console do Firebase.");
-            }
+            try { await signInWithPopup(auth, provider); } catch (e) { console.error(e); }
         };
 
         onAuthStateChanged(auth, (user) => {
@@ -112,7 +111,6 @@
                 document.getElementById('user-info').style.display = 'inline';
                 document.getElementById('login-btn').innerText = 'Sair';
                 document.getElementById('login-btn').onclick = () => auth.signOut().then(() => location.reload());
-                
                 if (user.email === "campameurer@gmail.com") {
                     document.getElementById('admin-panel').style.display = 'block';
                 }
@@ -123,27 +121,44 @@
             const title = document.getElementById('post-title').value;
             const img = document.getElementById('post-image').value;
             const body = document.getElementById('post-body').value;
-            if(!title || !body) return alert("Preencha título e conteúdo!");
+            if(!title || !body) return alert("Erro: Título e Conteúdo obrigatórios.");
             try {
                 await addDoc(collection(db, "posts"), { title, image: img, content: body, date: new Date() });
                 location.reload();
-            } catch (e) { alert("Sem permissão para postar no banco de dados."); }
+            } catch (e) { alert("Erro de permissão."); }
+        };
+
+        window.togglePost = (element) => {
+            const content = element.querySelector('.card-content');
+            content.style.display = (content.style.display === 'block') ? 'none' : 'block';
         };
 
         async function loadPosts(isNextPage = false) {
-            let q = query(collection(db, "posts"), orderBy("date", "desc"), limit(5));
+            let q = query(collection(db, "posts"), orderBy("date", "desc"), limit(6));
             if (isNextPage && lastVisiblePost) {
-                q = query(collection(db, "posts"), orderBy("date", "desc"), startAfter(lastVisiblePost), limit(5));
+                q = query(collection(db, "posts"), orderBy("date", "desc"), startAfter(lastVisiblePost), limit(6));
             }
             const snap = await getDocs(q);
             if (snap.empty) { document.getElementById('load-more').style.display = 'none'; return; }
             lastVisiblePost = snap.docs[snap.docs.length - 1];
             const feed = document.getElementById('blog-feed');
+            
             snap.forEach(doc => {
                 const p = doc.data();
-                const d = p.date.toDate().toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' });
-                feed.innerHTML += `<article class="blog-card"><h3>${p.title}</h3><span class="post-date">${d}</span><p>${p.content}</p>${p.image ? `<div class="post-image-footer"><img src="${p.image}"></div>` : ''}</article>`;
+                const d = p.date.toDate().toLocaleDateString('pt-BR', { day: 'numeric', month: 'long' });
+                const imgTag = p.image ? `<div class="card-image"><img src="${p.image}"></div>` : '';
+                
+                feed.innerHTML += `
+                    <article class="blog-card" onclick="togglePost(this)">
+                        <div class="card-header">
+                            <h3>${p.title}</h3>
+                            <span class="post-date">Publicado em ${d} • Clique para ler</span>
+                        </div>
+                        ${imgTag}
+                        <div class="card-content">${p.content}</div>
+                    </article>`;
             });
+            document.getElementById('load-more').style.display = 'block';
         }
         loadPosts();
     </script>
