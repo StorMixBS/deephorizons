@@ -7,72 +7,59 @@
     
     <meta name="description" content="Deep Horizons - Advanced technology intelligence and news.">
     <meta name="robots" content="index, follow">
-    
+
     <style>
         :root { --primary-black: #000000; --bg-gray: #fcfcfc; --text-main: #1a1a1a; }
         body { font-family: 'Inter', sans-serif; margin: 0; background-color: var(--bg-gray); color: var(--text-main); line-height: 1.6; }
-        header { background-color: var(--primary-black); color: white; padding: 70px 20px; text-align: center; }
-        header h1 { margin: 0; font-size: 3.5rem; text-transform: uppercase; letter-spacing: 8px; font-weight: 900; }
-        header p { margin: 10px 0 0; font-size: 1.1rem; color: #888; letter-spacing: 2px; }
+        
+        /* Nav Bar com Login */
+        nav { background: #000; padding: 10px 20px; display: flex; justify-content: flex-end; align-items: center; }
+        #login-btn { background: #4285F4; color: white; border: none; padding: 8px 15px; cursor: pointer; font-weight: bold; border-radius: 4px; font-size: 0.8rem; }
+        #user-info { color: white; font-size: 0.8rem; margin-right: 10px; display: none; }
+
+        header { background-color: var(--primary-black); color: white; padding: 50px 20px; text-align: center; }
+        header h1 { margin: 0; font-size: 3rem; text-transform: uppercase; letter-spacing: 8px; font-weight: 900; }
+        header p { margin: 10px 0 0; font-size: 1rem; color: #888; letter-spacing: 2px; }
+        
         .container { max-width: 850px; margin: 0 auto; padding: 20px; }
 
-        /* CAIXAS DE ANÚNCIO VISÍVEIS */
-        .ad-placeholder {
-            margin: 30px auto;
-            background: #ffdada; /* Vermelho claro para você enxergar no código */
-            border: 2px dashed #ff0000;
-            text-align: center;
-            padding: 30px;
-            font-weight: bold;
-            color: #ff0000;
-            min-height: 100px;
-        }
+        /* Painel Admin Oculto */
+        #admin-panel { display: none; background: #fff; padding: 30px; border: 3px solid #000; margin: 40px 0; box-shadow: 10px 10px 0px #000; }
+        #admin-panel input, #admin-panel textarea { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; box-sizing: border-box; }
+        .publish-btn { background: black; color: white; border: none; padding: 15px; cursor: pointer; width: 100%; font-weight: bold; text-transform: uppercase; }
 
-        #login-section { background: white; padding: 60px; border: 3px solid #000; text-align: center; margin: 50px auto; box-shadow: 15px 15px 0px #000; }
-        #admin-panel { display: none; background: white; padding: 45px; border: 3px solid #000; margin-bottom: 60px; box-shadow: 15px 15px 0px #000; }
-        button { background: black; color: white; border: none; padding: 22px; cursor: pointer; font-weight: bold; width: 100%; text-transform: uppercase; letter-spacing: 2px; transition: 0.3s; font-size: 1rem; }
-        .google-btn { background: #4285F4; margin-top: 15px; }
-        .blog-card { background: white; margin-bottom: 80px; padding-bottom: 50px; border-bottom: 2px solid #eee; }
-        .blog-content h3 { margin: 0; font-size: 3rem; line-height: 1.1; font-weight: 900; letter-spacing: -1px; }
-        .post-date { display: block; margin: 15px 0 30px 0; color: #bbb; font-size: 0.9rem; font-weight: bold; text-transform: uppercase; }
-        .post-image-footer img { max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 15px 40px rgba(0,0,0,0.12); }
-        #load-more { display: none; text-align: center; padding: 25px; border: 3px solid black; font-weight: 900; cursor: pointer; text-transform: uppercase; margin: 50px 0; letter-spacing: 3px; background: white; }
+        /* Feed */
+        .blog-card { background: white; margin-bottom: 60px; padding-bottom: 40px; border-bottom: 1px solid #eee; }
+        .blog-content h3 { margin: 0; font-size: 2.5rem; line-height: 1.1; font-weight: 900; }
+        .post-date { display: block; margin: 10px 0 20px 0; color: #bbb; font-size: 0.8rem; font-weight: bold; text-transform: uppercase; }
+        .post-image-footer img { max-width: 100%; height: auto; border-radius: 8px; margin-top: 20px; }
+        #load-more { display: block; text-align: center; padding: 20px; border: 2px solid black; font-weight: 900; cursor: pointer; margin: 40px 0; background: white; }
     </style>
 </head>
 <body>
+
+    <nav>
+        <span id="user-info"></span>
+        <button id="login-btn" onclick="handleLogin()">Login Admin</button>
+    </nav>
 
     <header>
         <h1>Deep Horizons</h1>
         <p>Advanced Technology Portal</p>
     </header>
 
-    <div class="ad-placeholder">
-        COLE O CÓDIGO DO BLOCO DE ANÚNCIO (INS) DO TOPO AQUI
-    </div>
-
     <div class="container">
-        <section id="login-section">
-            <h2>Portal Access</h2>
-            <button class="google-btn" onclick="handleLogin()">Sign in with Google</button>
-        </section>
-
         <div id="admin-panel">
-            <h2>Admin Terminal</h2>
-            <input type="text" id="post-title" placeholder="News title..."><br><br>
-            <input type="text" id="post-image" placeholder="Image link (Optional)"><br><br>
-            <textarea id="post-body" rows="10" style="width:100%" placeholder="Content..."></textarea><br><br>
-            <button onclick="createPost()">Deploy Publication</button>
+            <h2 style="margin-top:0">Novo Post</h2>
+            <input type="text" id="post-title" placeholder="Título da Notícia">
+            <input type="text" id="post-image" placeholder="Link da Imagem (URL)">
+            <textarea id="post-body" rows="8" placeholder="Conteúdo da notícia..."></textarea>
+            <button class="publish-btn" onclick="createPost()">Publicar Agora</button>
         </div>
 
-        <div id="main-content" style="display: none;">
-            <div id="blog-feed"></div>
-            
-            <div class="ad-placeholder">
-                COLE O CÓDIGO DO BLOCO DE ANÚNCIO (INS) DO FEED AQUI
-            </div>
-
-            <div id="load-more">Load Archive Data</div>
-        </div>
+        <div id="blog-feed"></div>
+        
+        <div id="load-more" onclick="loadPosts(true)">Carregar Mais Antigas</div>
     </div>
 
     <script type="module">
@@ -80,17 +67,15 @@
         import { getFirestore, collection, addDoc, query, orderBy, limit, getDocs, startAfter } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-        apiKey: "AIzaSyALHh2CFuSSWI2MR6RyiqRZZf4ABnp9Zyo",
-
-  authDomain: "deep-horizons-51171.firebaseapp.com",
-  projectId: "deep-horizons-51171",
-  storageBucket: "deep-horizons-51171.firebasestorage.app",
-  messagingSenderId: "670734932259",
-  appId: "1:670734932259:web:07dab3af4aefb077221496",
-  measurementId: "G-TPLB1K4SEY"
-
-};
-
+        // CONFIGURAÇÃO FIREBASE (SUBSTITUA PELOS SEUS DADOS)
+        const firebaseConfig = {
+            apiKey: "COLE_AQUI",
+            authDomain: "COLE_AQUI",
+            projectId: "COLE_AQUI",
+            storageBucket: "COLE_AQUI",
+            messagingSenderId: "COLE_AQUI",
+            appId: "COLE_AQUI"
+        };
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
@@ -98,42 +83,59 @@
         const provider = new GoogleAuthProvider();
         let lastVisiblePost = null;
 
-        window.handleLogin = async () => { try { await signInWithPopup(auth, provider); } catch (e) { alert("Erro no Login!"); } };
+        // Login Opcional
+        window.handleLogin = async () => {
+            try {
+                await signInWithPopup(auth, provider);
+            } catch (e) {
+                console.error(e);
+                alert("Erro ao abrir login. Verifique se autorizou o domínio no Firebase.");
+            }
+        };
 
+        // Monitor de Usuário
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                document.getElementById('login-section').style.display = 'none';
-                document.getElementById('main-content').style.display = 'block';
-                if (user.email === "campameurer@gmail.com") { document.getElementById('admin-panel').style.display = 'block'; }
-                loadPosts();
+                document.getElementById('user-info').innerText = user.email;
+                document.getElementById('user-info').style.display = 'inline';
+                document.getElementById('login-btn').innerText = 'Sair';
+                document.getElementById('login-btn').onclick = () => auth.signOut().then(() => location.reload());
+                
+                if (user.email === "campameurer@gmail.com") {
+                    document.getElementById('admin-panel').style.display = 'block';
+                }
             }
         });
 
+        // Postar
         window.createPost = async () => {
             const title = document.getElementById('post-title').value;
             const img = document.getElementById('post-image').value;
             const body = document.getElementById('post-body').value;
+            if(!title || !body) return alert("Preencha título e conteúdo!");
             try {
                 await addDoc(collection(db, "posts"), { title, image: img, content: body, date: new Date() });
                 location.reload();
-            } catch (e) { alert("Erro ao publicar."); }
+            } catch (e) { alert("Sem permissão para postar."); }
         };
 
+        // Carregar Posts (Sempre executa, logado ou não)
         async function loadPosts(isNextPage = false) {
             let q = query(collection(db, "posts"), orderBy("date", "desc"), limit(5));
-            if (isNextPage && lastVisiblePost) { q = query(collection(db, "posts"), orderBy("date", "desc"), startAfter(lastVisiblePost), limit(5)); }
+            if (isNextPage && lastVisiblePost) {
+                q = query(collection(db, "posts"), orderBy("date", "desc"), startAfter(lastVisiblePost), limit(5));
+            }
             const snap = await getDocs(q);
             if (snap.empty) { document.getElementById('load-more').style.display = 'none'; return; }
             lastVisiblePost = snap.docs[snap.docs.length - 1];
             const feed = document.getElementById('blog-feed');
             snap.forEach(doc => {
                 const p = doc.data();
-                const d = p.date.toDate().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+                const d = p.date.toDate().toLocaleDateString('pt-BR', { day: 'numeric', month: 'long', year: 'numeric' });
                 feed.innerHTML += `<article class="blog-card"><h3>${p.title}</h3><span class="post-date">${d}</span><p>${p.content}</p>${p.image ? `<div class="post-image-footer"><img src="${p.image}"></div>` : ''}</article>`;
             });
-            document.getElementById('load-more').style.display = 'block';
         }
-        document.getElementById('load-more').addEventListener('click', () => loadPosts(true));
+        loadPosts();
     </script>
 </body>
 </html>
