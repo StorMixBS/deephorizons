@@ -3,13 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="google-adsense-account" content="ca-pub-1257551136033803">
     <title>Deep Horizon | Everyday's technology news</title>
+    <meta name="description" content="Latest technology updates and AI news.">
     
-    <meta name="description" content="Stay updated with the latest in technology, AI, and innovations at Deep Horizon.">
-    <meta name="author" content="Deep Horizon Team">
-
-    <link rel="icon" type="image/jpeg" href="favicon.jpg">
+    <link rel="icon" type="image/jpeg"favicon.jpg">
 
     <link rel="stylesheet" href="style.css">
 
@@ -19,17 +16,17 @@
 
     <nav>
         <span id="user-info"></span>
-        <button id="login-btn" onclick="handleLogin()">Login with Google</button>
+        <button id="login-btn">Login with Google</button>
     </nav>
 
     <header>
-        <h1>Deep Horizon</h1>
+        <h1>DEEP HORIZON</h1>
         <p>Everyday's technology news</p>
     </header>
 
     <div class="container">
-        <div id="admin-controls">
-            <button id="toggle-icon-btn" class="btn-main" onclick="toggleAdminPanel()">+ New Post</button>
+        <div id="admin-controls" style="display: none;">
+            <button id="toggle-icon-btn" class="btn-main" onclick="toggleAdminPanel()">+ NEW POST</button>
             <div id="admin-panel">
                 <h2 id="panel-title">Create New Post</h2>
                 <input type="hidden" id="edit-id">
@@ -46,8 +43,6 @@
         <div id="blog-feed"></div>
         <button id="load-more" class="btn-main" style="display:none;" onclick="loadPosts(true)">Load More</button>
     </div>
-
-    <div id="lightbox" onclick="this.style.display='none'"><img id="lightbox-img" src=""></div>
 
     <footer>
         Deep Horizon © 2026 | <a href="about.html">About Us</a> | <a href="privacy.html">Privacy Policy</a>
