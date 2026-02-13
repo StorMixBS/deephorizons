@@ -1,5 +1,4 @@
 :root { --primary-black: #000000; --bg-gray: #fcfcfc; }
-
 body { font-family: 'Inter', sans-serif; margin: 0; background-color: var(--bg-gray); display: flex; flex-direction: column; min-height: 100vh; }
 
 /* Header & Nav */
