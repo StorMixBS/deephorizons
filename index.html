@@ -5,108 +5,73 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google-adsense-account" content="ca-pub-1257551136033803">
     <title>Deep Horizon | Everyday's technology news</title>
-    <link rel="icon" type="image/jpeg" href="b53148f6-cee8-42d0-b55d-577bc38e2425.jpg">
     
+    <link rel="icon" type="image/jpeg" href="b53148f6-cee8-42d0-b55d-577bc38e2425.jpg">
+
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1257551136033803" crossorigin="anonymous"></script>
 
     <style>
         :root { --primary-black: #000000; --bg-gray: #fcfcfc; --text-main: #1a1a1a; }
         body { font-family: 'Inter', sans-serif; margin: 0; background-color: var(--bg-gray); color: var(--text-main); line-height: 1.6; display: flex; flex-direction: column; min-height: 100vh; }
-        
         nav { background: #000; padding: 10px 20px; display: flex; justify-content: flex-end; align-items: center; }
         #login-btn { background: #4285F4; color: white; border: none; padding: 8px 15px; cursor: pointer; font-weight: bold; border-radius: 4px; font-size: 0.8rem; }
         #user-info { color: white; font-size: 0.8rem; margin-right: 10px; display: none; }
-
         header { background-color: var(--primary-black); color: white; padding: 50px 20px; text-align: center; }
         header h1 { margin: 0; font-size: 3rem; text-transform: uppercase; letter-spacing: 8px; font-weight: 900; }
         header p { margin: 10px 0 0; font-size: 1rem; color: #888; letter-spacing: 2px; }
-        
         .container { max-width: 1000px; margin: 0 auto; padding: 20px; flex: 1; }
-
-        /* Admin UI */
         #admin-controls { display: none; margin: 20px 0; text-align: center; }
         #admin-panel { display: none; background: #fff; padding: 30px; border: 3px solid #000; margin: 20px 0; box-shadow: 10px 10px 0px #000; }
         #admin-panel input, #admin-panel textarea { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ddd; box-sizing: border-box; font-family: inherit; }
-
-        /* News Grid */
         #blog-feed { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 25px; margin-top: 30px; }
-
-        /* News Card */
         .blog-card { background: white; border: 1px solid #eee; cursor: pointer; position: relative; border-radius: 8px; overflow: hidden; height: fit-content; transition: 0.3s; }
         .blog-card.active { grid-column: 1 / -1; cursor: default; border: 1px solid #000; }
-
         .card-header { padding: 20px; position: relative; }
         .card-header h3 { margin: 0; font-size: 1.5rem; line-height: 1.2; padding-right: 60px; color: #000; }
         .active .card-header h3 { font-size: 2.2rem; }
-        
-        /* Close Button */
         .close-post { display: none; position: absolute; top: 15px; right: 15px; font-size: 24px; cursor: pointer; z-index: 10; color: #000; }
         .active .close-post { display: block; }
-
-        /* Admin Vertical Dots */
         .admin-dots { display: none; position: absolute; top: 10px; right: 40px; cursor: pointer; font-size: 1.8rem; color: #000 !important; z-index: 20; padding: 5px; font-weight: bold; }
-
         .card-image img { width: 100%; height: 250px; object-fit: cover; display: block; }
         .active .card-image img { height: 450px; }
-
         .card-content { display: none; padding: 25px; white-space: pre-wrap; font-size: 1.1rem; border-top: 1px solid #eee; background: #fff; color: #333; }
         .active .card-content { display: block; }
-
-        /* Cookie Banner */
-        #cookie-banner { position: fixed; bottom: 0; left: 0; width: 100%; background: #000; color: #fff; padding: 20px; display: none; z-index: 10000; text-align: center; font-size: 0.9rem; border-top: 1px solid #444; }
-        .cookie-btn { background: #fff; color: #000; border: none; padding: 8px 25px; font-weight: bold; cursor: pointer; text-transform: uppercase; border-radius: 4px; margin-left: 15px; }
-
-        /* General Buttons */
         .btn-main { display: block; width: 100%; padding: 15px; margin: 20px 0; border: 2px solid black; background: white; font-weight: bold; cursor: pointer; text-transform: uppercase; letter-spacing: 1px; }
         .btn-admin-toggle { background: #000; color: #fff; max-width: 300px; margin: 0 auto; }
-
-        /* Lightbox */
         #lightbox { display: none; position: fixed; z-index: 9999; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); justify-content: center; align-items: center; }
         #lightbox img { max-width: 90%; max-height: 90%; }
-
         footer { background-color: #000; color: #fff; text-align: center; padding: 40px 20px; margin-top: 50px; }
-        footer a { color: #888; text-decoration: none; margin-left: 15px; font-size: 0.8rem; transition: 0.3s; }
+        footer a { color: #888; text-decoration: none; margin-left: 15px; font-size: 0.8rem; }
         footer a:hover { color: #fff; text-decoration: underline; }
     </style>
 </head>
 <body>
-
     <nav>
         <span id="user-info"></span>
         <button id="login-btn" onclick="handleLogin()">Login with Google</button>
     </nav>
-
     <header>
         <h1>Deep Horizon</h1>
         <p>Everyday's technology news</p>
     </header>
-
     <div class="container">
         <div id="admin-controls">
             <button id="toggle-icon-btn" class="btn-main btn-admin-toggle" onclick="toggleAdminPanel()">+ New Post</button>
             <div id="admin-panel">
-                <h2 style="margin-top:0">Create New Post</h2>
+                <h2>Create New Post</h2>
                 <input type="text" id="post-title" placeholder="Post Title">
                 <input type="text" id="post-image" placeholder="Image URL">
-                <textarea id="post-body" rows="8" placeholder="Write content here (use paragraphs)..."></textarea>
+                <textarea id="post-body" rows="8" placeholder="Write content..."></textarea>
                 <div style="display: flex; gap: 10px;">
-                    <button class="btn-main" style="background: #000; color: #fff; margin: 0;" onclick="createPost()">Publish</button>
-                    <button class="btn-main" style="margin: 0;" onclick="toggleAdminPanel()">Cancel</button>
+                    <button class="btn-main" style="background: #000; color: #fff;" onclick="createPost()">Publish</button>
+                    <button class="btn-main" onclick="toggleAdminPanel()">Cancel</button>
                 </div>
             </div>
         </div>
-
         <div id="blog-feed"></div>
         <button id="load-more" class="btn-main" style="display:none;" onclick="toggleLoadMore()">See More News</button>
     </div>
-
-    <div id="cookie-banner">
-        This website uses cookies to ensure you get the best experience and to personalize ads. 
-        <button class="cookie-btn" onclick="acceptCookies()">Accept</button>
-    </div>
-
     <div id="lightbox" onclick="this.style.display='none'"><img id="lightbox-img" src=""></div>
-
     <footer>
         Deep Horizon. All rights reserved © 2026 
         <a href="about.html">About Us</a>
@@ -117,6 +82,7 @@
         import { getFirestore, collection, addDoc, query, orderBy, limit, getDocs, startAfter, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
+        const firebaseConfig = {
   apiKey: "AIzaSyALHh2CFuSSWI2MR6RyiqRZZf4ABnp9Zyo",
   authDomain: "deep-horizons-51171.firebaseapp.com",
   projectId: "deep-horizons-51171",
@@ -134,55 +100,38 @@
         let isAdmin = false;
 
         window.handleLogin = async () => { try { await signInWithPopup(auth, provider); } catch (e) { console.error(e); } };
-
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 isAdmin = (user.email === "campameurer@gmail.com");
                 document.getElementById('user-info').innerText = user.email;
                 document.getElementById('user-info').style.display = 'inline';
                 document.getElementById('login-btn').innerText = 'Logout';
-                document.getElementById('login-btn').onclick = () => auth.signOut().then(() => location.reload());
                 if (isAdmin) document.getElementById('admin-controls').style.display = 'block';
             }
             loadPosts();
         });
 
-        window.acceptCookies = () => {
-            localStorage.setItem('cookiesAccepted', 'true');
-            document.getElementById('cookie-banner').style.display = 'none';
-        };
-
         window.toggleAdminPanel = () => {
             const panel = document.getElementById('admin-panel');
-            const btn = document.getElementById('toggle-icon-btn');
-            const isVisible = panel.style.display === 'block';
-            panel.style.display = isVisible ? 'none' : 'block';
-            btn.innerText = isVisible ? "+ New Post" : "- New Post";
+            panel.style.display = panel.style.display === 'block' ? 'none' : 'block';
         };
 
         window.deletePost = async (event, postId) => {
             event.stopPropagation();
-            if (confirm("Do you want to delete this news permanently?")) {
-                if (confirm("ARE YOU ABSOLUTELY SURE?")) {
-                    await deleteDoc(doc(db, "posts", postId));
-                    location.reload();
-                }
+            if (confirm("Delete permanently?")) {
+                await deleteDoc(doc(db, "posts", postId));
+                location.reload();
             }
         };
 
         window.togglePost = (event, element) => {
-            const isImage = event.target.tagName === 'IMG';
-            const isClose = event.target.classList.contains('close-post');
-            const isDots = event.target.classList.contains('admin-dots');
-            if (isDots) return;
-            if (isClose) { event.stopPropagation(); element.classList.remove('active'); return; }
-            if (!element.classList.contains('active')) {
-                element.classList.add('active');
-                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            } else if (isImage) {
-                document.getElementById('lightbox-img').src = event.target.src;
-                document.getElementById('lightbox').style.display = 'flex';
+            if (event.target.classList.contains('admin-dots')) return;
+            if (event.target.classList.contains('close-post')) {
+                event.stopPropagation();
+                element.classList.remove('active');
+                return;
             }
+            element.classList.add('active');
         };
 
         async function loadPosts(isNextPage = false) {
@@ -195,12 +144,11 @@
             snap.forEach(docSnap => {
                 const p = docSnap.data();
                 const id = docSnap.id;
-                const dotsDisplay = isAdmin ? 'display: block;' : '';
                 feed.innerHTML += `
                     <article class="blog-card" onclick="togglePost(event, this)">
                         <div class="card-header">
                             <span class="close-post">&times;</span>
-                            <span class="admin-dots" style="${dotsDisplay}" onclick="deletePost(event, '${id}')">⋮</span>
+                            <span class="admin-dots" style="${isAdmin ? 'display:block' : ''}" onclick="deletePost(event, '${id}')">⋮</span>
                             <h3>${p.title}</h3>
                         </div>
                         ${p.image ? `<div class="card-image"><img src="${p.image}"></div>` : ''}
@@ -210,22 +158,13 @@
             document.getElementById('load-more').style.display = 'block';
         }
 
-        window.toggleLoadMore = () => {
-            const btn = document.getElementById('load-more');
-            if (btn.innerText === "SEE MORE NEWS") { loadPosts(true); btn.innerText = "COLLAPSE NEWS"; }
-            else { location.reload(); }
-        };
-
         window.createPost = async () => {
             const title = document.getElementById('post-title').value;
             const img = document.getElementById('post-image').value;
             const body = document.getElementById('post-body').value;
-            if(!title || !body) return alert("Fill in title and content!");
             await addDoc(collection(db, "posts"), { title, image: img, content: body, date: new Date() });
             location.reload();
         };
-
-        if (!localStorage.getItem('cookiesAccepted')) { document.getElementById('cookie-banner').style.display = 'block'; }
     </script>
 </body>
 </html>
