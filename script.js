@@ -1,5 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, addDoc, updateDoc, query, orderBy, limit, getDocs, startAfter, deleteDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, collection, addDoc, updateDoc, query, orderBy, limit, getDocs, deleteDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
 const firebaseConfig = {
@@ -20,38 +20,108 @@ const ADMIN_EMAIL = "campameurer@gmail.com";
 
 let lastVisiblePost = null;
 let isAdmin = false;
-let postsLoaded = false;
 
+// --- Authentication ---
+const loginBtn = document.getElementById('login-btn');
 onAuthStateChanged(auth, (user) => {
+    const adminControls = document.getElementById('admin-controls');
     if (user) {
         isAdmin = (user.email === ADMIN_EMAIL);
         document.getElementById('user-info').innerText = user.email;
-        document.getElementById('login-btn').innerText = "Logout";
-        document.getElementById('login-btn').onclick = () => signOut(auth).then(() => location.reload());
-        if (isAdmin) document.getElementById('admin-controls').style.display = 'block';
+        loginBtn.innerText = "Logout";
+        loginBtn.onclick = () => signOut(auth).then(() => location.reload());
+        if (isAdmin) adminControls.style.display = 'block';
     } else {
         isAdmin = false;
-        document.getElementById('login-btn').onclick = () => signInWithPopup(auth, provider);
+        loginBtn.innerText = "Login with Google";
+        loginBtn.onclick = () => signInWithPopup(auth, provider);
+        if (adminControls) adminControls.style.display = 'none';
     }
-    if (!postsLoaded) { loadPosts(); postsLoaded = true; }
+    if (!lastVisiblePost) loadPosts();
 });
 
-async function loadPosts(isNextPage = false) {
-    let q = query(collection(db, "posts"), orderBy("date", "desc"), limit(6));
-    if (isNextPage && lastVisiblePost) {
-        q = query(collection(db, "posts"), orderBy("date", "desc"), startAfter(lastVisiblePost), limit(6));
-    }
-    const snap = await getDocs(q);
-    if (snap.empty) return;
-    lastVisiblePost = snap.docs[snap.docs.length - 1];
-    const feed = document.getElementById('blog-feed');
+// --- Database Operations ---
+window.savePost = async () => {
+    if (!isAdmin) return alert("Unauthorized");
+    const id = document.getElementById('edit-id').value;
+    const data = {
+        title: document.getElementById('post-title').value,
+        image: document.getElementById('post-image').value,
+        content: document.getElementById('post-body').value,
+        date: new Date()
+    };
+    if (id) await updateDoc(doc(db, "posts", id), data);
+    else await addDoc(collection(db, "posts"), data);
+    location.reload();
+};
 
+window.deletePost = async (e, id) => {
+    e.stopPropagation();
+    if (isAdmin && confirm("Delete post?")) {
+        await deleteDoc(doc(db, "posts", id));
+        location.reload();
+    }
+};
+
+window.editPost = async (e, id) => {
+    e.stopPropagation();
+    const snap = await getDoc(doc(db, "posts", id));
+    if (snap.exists()) {
+        const p = snap.data();
+        document.getElementById('admin-panel').style.display = 'block';
+        document.getElementById('edit-id').value = id;
+        document.getElementById('post-title').value = p.title;
+        document.getElementById('post-image').value = p.image;
+        document.getElementById('post-body').value = p.content;
+        window.scrollTo(0,0);
+    }
+};
+
+// --- UI Functions ---
+window.togglePost = (e, el) => {
+    // Se clicar no botão admin ou no botão fechar, não faz o toggle normal
+    if (e.target.closest('.admin-menu-container') || e.target.closest('.close-btn')) return;
+    
+    // Abre a notícia apenas se não estiver aberta
+    if (!el.classList.contains('active')) {
+        el.classList.add('active');
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+};
+
+// Nova função para fechar a notícia
+window.closePost = (e, el) => {
+    e.stopPropagation(); // Impede que o clique ative o togglePost do card
+    el.classList.remove('active');
+    // Pequeno delay para o scroll suave após o card diminuir
+    setTimeout(() => {
+        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 100);
+};
+
+window.toggleAdminPanel = () => {
+    const p = document.getElementById('admin-panel');
+    p.style.display = p.style.display === 'block' ? 'none' : 'block';
+};
+
+window.toggleOptionsMenu = (e) => {
+    e.stopPropagation();
+    const menu = e.currentTarget.nextElementSibling;
+    menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+};
+
+async function loadPosts() {
+    const q = query(collection(db, "posts"), orderBy("date", "desc"), limit(10));
+    const snap = await getDocs(q);
+    const feed = document.getElementById('blog-feed');
+    feed.innerHTML = ""; // Limpa o feed antes de carregar
+    
     snap.forEach(docSnap => {
         const p = docSnap.data();
         const id = docSnap.id;
         feed.innerHTML += `
             <article class="blog-card" onclick="togglePost(event, this)">
-                <div class="close-post" onclick="closePost(event, this.parentElement)">&times;</div>
+                <div class="close-btn" onclick="closePost(event, this.parentElement)">✕</div>
                 <div class="card-header">
                     <div class="admin-menu-container" style="${isAdmin ? 'display:block' : 'display:none'}">
                         <span class="admin-dots" onclick="toggleOptionsMenu(event)">⋮</span>
@@ -67,62 +137,3 @@ async function loadPosts(isNextPage = false) {
             </article>`;
     });
 }
-
-window.togglePost = (e, el) => {
-    if (e.target.closest('.admin-menu-container') || e.target.classList.contains('close-post')) return;
-    if (!el.classList.contains('active')) {
-        el.classList.add('active');
-        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-};
-
-// FUNÇÃO PARA FECHAR NO X
-window.closePost = (e, el) => {
-    e.stopPropagation();
-    el.classList.remove('active');
-    window.scrollTo({ top: el.offsetTop - 100, behavior: 'smooth' });
-};
-
-window.toggleOptionsMenu = (e) => {
-    e.stopPropagation();
-    document.querySelectorAll('.admin-options').forEach(m => m.style.display = 'none');
-    e.currentTarget.nextElementSibling.style.display = 'block';
-};
-
-window.savePost = async () => {
-    if (!isAdmin) return;
-    const id = document.getElementById('edit-id').value;
-    const data = {
-        title: document.getElementById('post-title').value,
-        image: document.getElementById('post-image').value,
-        content: document.getElementById('post-body').value,
-        date: new Date()
-    };
-    id ? await updateDoc(doc(db, "posts", id), data) : await addDoc(collection(db, "posts"), data);
-    location.reload();
-};
-
-window.editPost = async (e, id) => {
-    e.stopPropagation();
-    const snap = await getDoc(doc(db, "posts", id));
-    const p = snap.data();
-    document.getElementById('admin-panel').style.display = 'block';
-    document.getElementById('edit-id').value = id;
-    document.getElementById('post-title').value = p.title;
-    document.getElementById('post-image').value = p.image;
-    document.getElementById('post-body').value = p.content;
-    window.scrollTo(0,0);
-};
-
-window.deletePost = async (e, id) => {
-    e.stopPropagation();
-    if (confirm("Delete?")) { await deleteDoc(doc(db, "posts", id)); location.reload(); }
-};
-
-window.toggleAdminPanel = () => {
-    const p = document.getElementById('admin-panel');
-    p.style.display = p.style.display === 'block' ? 'none' : 'block';
-};
-
-window.onclick = () => document.querySelectorAll('.admin-options').forEach(m => m.style.display = 'none');
-window.loadPosts = loadPosts;
