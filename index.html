@@ -3,19 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="google-adsense-account" content="ca-pub-1257551136033803">
-    <title>Deep Horizon | Everyday's technology news</title>
-
-    <meta name="description" content="Latest technology updates and AI news.">
-
+    <title>Deep Horizon | Technology News</title>
     <link rel="icon" type="image/jpeg" href="favicon.jpg">
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
-
     <link rel="stylesheet" href="style.css">
-
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1257551136033803" crossorigin="anonymous"></script>
 </head>
 <body>
@@ -27,52 +17,36 @@
 
     <header>
         <h1>DEEP HORIZON</h1>
-        <p>Decoding the present and future of technology</p>
+        <p>Decoding the future of technology</p>
     </header>
 
     <div class="container">
-        
         <div id="admin-controls" style="display: none;">
             <button class="btn-main" onclick="toggleAdminPanel()">+ NEW POST</button>
-
             <div id="admin-panel" style="display: none;">
                 <h2 id="panel-title">Post Management</h2>
                 <input type="hidden" id="edit-id">
-                
-                <label for="post-title" style="display:none;">Title</label>
                 <input type="text" id="post-title" placeholder="Post Title">
-                
-                <label for="post-image" style="display:none;">Image URL</label>
-                <input type="text" id="post-image" placeholder="Image URL (Direct link)">
-                
-                <label for="post-body" style="display:none;">Content</label>
-                <textarea id="post-body" rows="8" placeholder="Write your content here..."></textarea>
-                
-                <div style="display: flex; gap: 10px;">
-                    <button class="btn-main" style="background: #000; color: #fff;" onclick="savePost()">Save Post</button>
+                <input type="text" id="post-image" placeholder="Image URL">
+                <textarea id="post-body" rows="8" placeholder="Content..."></textarea>
+                <div style="gap: 10px; display: flex;">
+                    <button class="btn-main" style="background: #000; color: #fff;" onclick="savePost()">Save</button>
                     <button class="btn-main" onclick="toggleAdminPanel()">Cancel</button>
                 </div>
             </div>
         </div>
 
-        <div id="blog-feed">
-            </div>
+        <div id="blog-feed"></div>
 
         <button id="load-more" class="btn-main" style="display:none;" onclick="loadPosts(true)">
             See More News
         </button>
-
     </div>
 
     <footer>
-        <p>Deep Horizon © 2026</p>
-        <div>
-            <a href="about.html">About Us</a> | 
-            <a href="privacy.html">Privacy Policy</a>
-        </div>
+        Deep Horizon © 2026 | <a href="about.html">About Us</a> | <a href="privacy.html">Privacy Policy</a>
     </footer>
 
     <script type="module" src="script.js"></script>
-
 </body>
 </html>
