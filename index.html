@@ -3,52 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="google-adsense-account" content="ca-pub-1257551136033803">
-    <title>Deep Horizon | Everyday's technology news</title>
-    <meta name="description" content="Latest technology updates and AI news.">
-    
+    <title>About Us | Deep Horizon</title>
     <link rel="icon" type="image/jpeg" href="favicon.jpg">
-
     <link rel="stylesheet" href="style.css">
-
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1257551136033803" crossorigin="anonymous"></script>
 </head>
 <body>
-
     <nav>
-        <span id="user-info"></span>
-        <button id="login-btn">Login with Google</button>
+        <a href="index.html" style="color: white; text-decoration: none; font-weight: bold;">← Back to Feed</a>
     </nav>
-
+    
     <header>
-        <h1>DEEP HORIZON</h1>
-        <p>Everyday's technology news</p>
+        <h1>ABOUT US</h1>
+        <p>Decoding the present and future of technology</p>
     </header>
 
     <div class="container">
-        <div id="admin-controls" style="display: none;">
-            <button id="toggle-icon-btn" class="btn-main" onclick="toggleAdminPanel()">+ NEW POST</button>
-            <div id="admin-panel">
-                <h2 id="panel-title">Create New Post</h2>
-                <input type="hidden" id="edit-id">
-                <input type="text" id="post-title" placeholder="Post Title">
-                <input type="text" id="post-image" placeholder="Image URL">
-                <textarea id="post-body" rows="8" placeholder="Content..."></textarea>
-                <div style="display: flex; gap: 10px;">
-                    <button class="btn-main" style="background: #000; color: #fff;" onclick="savePost()">Save Post</button>
-                    <button class="btn-main" onclick="toggleAdminPanel()">Cancel</button>
-                </div>
+        <article class="blog-card active" style="padding: 40px;">
+            <div class="card-header">
+                <h3>Our Mission</h3>
             </div>
-        </div>
-
-        <div id="blog-feed"></div>
-        <button id="load-more" class="btn-main" style="display:none;" onclick="loadPosts(true)">Load More</button>
+            <div class="card-content" style="display: block; border: none;">
+                <p>At <strong>Deep Horizon</strong>, our mission is to decode the complexity of technological innovations for everyone. We believe that the future shouldn't just be observed—it should be understood.</p>
+                
+                <h3>What We Do</h3>
+                <p>We provide daily insights and comprehensive updates on the world of technology, covering AI advancements, market trends, and emerging innovations.</p>
+                
+                <h3>Editorial Integrity</h3>
+                <p>Deep Horizon operates with transparency. Our platform is supported by advertising through partners like Google AdSense, which allows us to keep this knowledge accessible for free.</p>
+            </div>
+        </article>
     </div>
 
-    <footer>
-        Deep Horizon © 2026 | <a href="about.html">About Us</a> | <a href="privacy.html">Privacy Policy</a>
-    </footer>
-
-    <script type="module" src="script.js"></script>
+    <footer>Deep Horizon © 2026 | <a href="privacy.html">Privacy Policy</a></footer>
 </body>
 </html>
