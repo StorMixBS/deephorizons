@@ -1,8 +1,7 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-import { getFirestore, collection, addDoc, updateDoc, query, orderBy, limit, getDocs, deleteDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+import { getFirestore, collection, addDoc, updateDoc, query, orderBy, limit, getDocs, startAfter, deleteDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-// Configuração do Firebase (Mantenha as suas chaves aqui)
 const firebaseConfig = {
   apiKey: "AIzaSyALHh2CFuSSWI2MR6RyiqRZZf4ABnp9Zyo",
   authDomain: "deep-horizons-51171.firebaseapp.com",
@@ -21,15 +20,15 @@ const ADMIN_EMAIL = "campameurer@gmail.com";
 
 let lastVisiblePost = null;
 let isAdmin = false;
+const POSTS_PER_PAGE = 6;
 
+// --- Authentication ---
 onAuthStateChanged(auth, (user) => {
     const adminControls = document.getElementById('admin-controls');
-    const userInfo = document.getElementById('user-info');
     const loginBtn = document.getElementById('login-btn');
-
     if (user) {
         isAdmin = (user.email === ADMIN_EMAIL);
-        userInfo.innerText = user.email;
+        document.getElementById('user-info').innerText = user.email;
         loginBtn.innerText = "Logout";
         loginBtn.onclick = () => signOut(auth).then(() => location.reload());
         if (isAdmin) adminControls.style.display = 'block';
@@ -41,11 +40,9 @@ onAuthStateChanged(auth, (user) => {
     if (!lastVisiblePost) loadPosts();
 });
 
-// Funções Globais de Interface
+// --- UI Functions ---
 window.togglePost = (e, el) => {
-    // Se clicar em botões de admin ou fechar, não faz o toggle
     if (e.target.closest('.admin-menu-container') || e.target.closest('.close-btn')) return;
-    
     if (!el.classList.contains('active')) {
         el.classList.add('active');
         el.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -68,16 +65,40 @@ window.toggleAdminPanel = () => {
 window.toggleOptionsMenu = (e) => {
     e.stopPropagation();
     const menu = e.currentTarget.nextElementSibling;
-    const allMenus = document.querySelectorAll('.admin-options');
-    allMenus.forEach(m => { if(m !== menu) m.style.display = 'none' }); // Fecha outros menus
     menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
 };
 
-async function loadPosts() {
-    const q = query(collection(db, "posts"), orderBy("date", "desc"), limit(10));
-    const snap = await getDocs(q);
+// --- Carregar Notícias com Lógica de Fechar no Botão ---
+async function loadPosts(isLoadMore = false) {
     const feed = document.getElementById('blog-feed');
+    const loadMoreBtn = document.getElementById('load-more');
+
+    // Se o botão for clicado e já tivermos mais posts que o limite, ele "RECOLE"
+    if (isLoadMore && loadMoreBtn.innerText === "Show Less") {
+        lastVisiblePost = null;
+        loadMoreBtn.innerText = "See More News";
+        loadPosts(); // Recarrega apenas os primeiros
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        return;
+    }
+
+    let q;
+    if (isLoadMore && lastVisiblePost) {
+        q = query(collection(db, "posts"), orderBy("date", "desc"), startAfter(lastVisiblePost), limit(POSTS_PER_PAGE));
+    } else {
+        q = query(collection(db, "posts"), orderBy("date", "desc"), limit(POSTS_PER_PAGE));
+        feed.innerHTML = ""; // Limpa para resetar
+    }
+
+    const snap = await getDocs(q);
     
+    if (snap.empty) {
+        loadMoreBtn.style.display = 'none';
+        return;
+    }
+
+    lastVisiblePost = snap.docs[snap.docs.length - 1];
+
     snap.forEach(docSnap => {
         const p = docSnap.data();
         const id = docSnap.id;
@@ -98,9 +119,22 @@ async function loadPosts() {
                 ${p.image ? `<div class="card-image"><img src="${p.image}"></div>` : ''}
             </article>`;
     });
-}
 
-// Funções de Banco de Dados (Save, Edit, Delete)
+    // Se carregou o limite, mostra o botão. Se já carregou extras, muda o texto para permitir fechar.
+    if (snap.docs.length < POSTS_PER_PAGE && !isLoadMore) {
+        loadMoreBtn.style.display = 'none';
+    } else {
+        loadMoreBtn.style.display = 'block';
+        if (isLoadMore) {
+            loadMoreBtn.innerText = "Show Less";
+        } else {
+            loadMoreBtn.innerText = "See More News";
+        }
+    }
+}
+window.loadPosts = loadPosts;
+
+// --- Database Operations (Admin) ---
 window.savePost = async () => {
     const id = document.getElementById('edit-id').value;
     const data = {
