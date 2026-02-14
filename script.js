@@ -2,9 +2,8 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
 import { getFirestore, collection, addDoc, updateDoc, query, orderBy, limit, getDocs, startAfter, deleteDoc, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
 
-// --- CONFIGURAÇÃO ---
 const firebaseConfig = {
-    apiKey: "AIzaSyALHh2CFuSSWI2MR6RyiqRZZf4ABnp9Zyo",
+  apiKey: "AIzaSyALHh2CFuSSWI2MR6RyiqRZZf4ABnp9Zyo",
   authDomain: "deep-horizons-51171.firebaseapp.com",
   projectId: "deep-horizons-51171",
   storageBucket: "deep-horizons-51171.firebasestorage.app",
@@ -23,51 +22,50 @@ let lastVisiblePost = null;
 let isAdmin = false;
 const POSTS_PER_PAGE = 6;
 
-// --- LOGIN COM GOOGLE ---
-window.loginGoogle = async () => {
+// --- FUNÇÃO DE LOGIN (REVISADA) ---
+const handleLogin = async () => {
     try {
+        provider.setCustomParameters({ prompt: 'select_account' }); // Força escolher a conta
         await signInWithPopup(auth, provider);
-        console.log("Login efetuado!");
     } catch (error) {
         console.error("Erro no login:", error);
-        alert("Erro ao fazer login: " + error.message);
+        alert("Falha no login. Verifique se os pop-ups estão permitidos.");
     }
 };
 
-window.logoutGoogle = () => {
-    signOut(auth).then(() => {
-        location.reload();
-    });
+const handleLogout = () => {
+    signOut(auth).then(() => location.reload());
 };
 
-// --- MONITOR DE AUTENTICAÇÃO ---
+// --- MONITOR DE ESTADO ---
 onAuthStateChanged(auth, (user) => {
     const adminControls = document.getElementById('admin-controls');
     const loginBtn = document.getElementById('login-btn');
     const userInfo = document.getElementById('user-info');
 
-    if (user && user.email === ADMIN_EMAIL) {
-        isAdmin = true;
+    if (user) {
         userInfo.innerText = user.email;
+        if (user.email === ADMIN_EMAIL) {
+            isAdmin = true;
+            adminControls.style.display = 'block';
+        } else {
+            isAdmin = false;
+            adminControls.style.display = 'none';
+        }
         loginBtn.innerText = "Logout";
-        loginBtn.onclick = logoutGoogle;
-        adminControls.style.display = 'block'; // SÓ MOSTRA SE FOR SEU E-MAIL
+        loginBtn.onclick = handleLogout;
     } else {
         isAdmin = false;
         userInfo.innerText = "";
+        adminControls.style.display = 'none';
         loginBtn.innerText = "Login with Google";
-        loginBtn.onclick = loginGoogle;
-        adminControls.style.display = 'none'; // ESCONDE PARA QUALQUER OUTRO
-        
-        if (user) {
-            console.log("Logado como usuário comum, sem acesso admin.");
-        }
+        loginBtn.onclick = handleLogin;
     }
     
     if (!lastVisiblePost) loadPosts();
 });
 
-// --- FUNÇÕES DE INTERFACE ---
+// --- UI E GRID ---
 window.togglePost = (e, el) => {
     if (e.target.closest('.admin-menu-container') || e.target.closest('.close-btn')) return;
     if (!el.classList.contains('active')) {
@@ -79,9 +77,7 @@ window.togglePost = (e, el) => {
 window.closePost = (e, el) => {
     e.stopPropagation();
     el.classList.remove('active');
-    setTimeout(() => {
-        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }, 50);
+    setTimeout(() => el.scrollIntoView({ behavior: 'smooth', block: 'center' }), 50);
 };
 
 window.toggleAdminPanel = () => {
@@ -95,7 +91,7 @@ window.toggleOptionsMenu = (e) => {
     menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
 };
 
-// --- CARREGAR POSTS ---
+// --- CARREGAMENTO DE POSTS ---
 async function loadPosts(isLoadMore = false) {
     const feed = document.getElementById('blog-feed');
     const loadMoreBtn = document.getElementById('load-more');
@@ -108,13 +104,11 @@ async function loadPosts(isLoadMore = false) {
         return;
     }
 
-    let q;
-    if (isLoadMore && lastVisiblePost) {
-        q = query(collection(db, "posts"), orderBy("date", "desc"), startAfter(lastVisiblePost), limit(POSTS_PER_PAGE));
-    } else {
-        q = query(collection(db, "posts"), orderBy("date", "desc"), limit(POSTS_PER_PAGE));
-        feed.innerHTML = "";
-    }
+    let q = isLoadMore && lastVisiblePost 
+        ? query(collection(db, "posts"), orderBy("date", "desc"), startAfter(lastVisiblePost), limit(POSTS_PER_PAGE))
+        : query(collection(db, "posts"), orderBy("date", "desc"), limit(POSTS_PER_PAGE));
+
+    if (!isLoadMore) feed.innerHTML = "";
 
     const snap = await getDocs(q);
     if (snap.empty) {
@@ -161,17 +155,13 @@ window.savePost = async () => {
         content: document.getElementById('post-body').value,
         date: new Date()
     };
-    if (id) await updateDoc(doc(db, "posts", id), data);
-    else await addDoc(collection(db, "posts"), data);
+    id ? await updateDoc(doc(db, "posts", id), data) : await addDoc(collection(db, "posts"), data);
     location.reload();
 };
 
 window.deletePost = async (e, id) => {
     e.stopPropagation();
-    if (isAdmin && confirm("Delete post?")) {
-        await deleteDoc(doc(db, "posts", id));
-        location.reload();
-    }
+    if (isAdmin && confirm("Delete?")) { await deleteDoc(doc(db, "posts", id)); location.reload(); }
 };
 
 window.editPost = async (e, id) => {
