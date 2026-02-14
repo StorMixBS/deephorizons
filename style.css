@@ -12,8 +12,8 @@ body {
     min-height: 100vh; 
 }
 
-/* --- Interatividade Globais --- */
-a, button, .blog-card, .admin-dots, .close-btn {
+/* --- Interatividade (Mãozinha) --- */
+a, button, .blog-card, .admin-dots, .close-btn, #load-more {
     cursor: pointer;
 }
 
@@ -30,7 +30,7 @@ header h1 { margin: 0; font-size: 3rem; letter-spacing: 8px; font-weight: 900; }
 #blog-feed { 
     display: grid; 
     grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); 
-    gap: 30px; 
+    gap: 25px; 
 }
 
 .blog-card { 
@@ -40,21 +40,18 @@ header h1 { margin: 0; font-size: 3rem; letter-spacing: 8px; font-weight: 900; }
     overflow: hidden; 
     display: flex; 
     flex-direction: column; 
-    transition: transform 0.3s ease, box-shadow 0.3s ease; 
+    transition: 0.3s; 
     position: relative;
 }
-
-.blog-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
 
 /* Card Ativo (Notícia Aberta) */
 .blog-card.active { 
     grid-column: 1 / -1; 
     border: 1px solid #000;
     cursor: default; 
-    transform: none;
 }
 
-/* Botão de Fechar (X) */
+/* Botão de Fechar (X) no canto superior esquerdo */
 .close-btn {
     position: absolute;
     top: 15px;
@@ -64,23 +61,25 @@ header h1 { margin: 0; font-size: 3rem; letter-spacing: 8px; font-weight: 900; }
     background: #000;
     color: #fff;
     border-radius: 50%;
-    display: none;
+    display: none; /* Só aparece quando o card for .active */
     align-items: center;
     justify-content: center;
     font-size: 1.2rem;
     z-index: 20;
     border: 2px solid #fff;
+    transition: 0.2s;
 }
+.close-btn:hover { background: #333; transform: scale(1.1); }
 .active .close-btn { display: flex; }
 
 .card-header { padding: 20px; position: relative; order: 1; }
 .card-header h3 { margin: 0; font-size: 1.4rem; font-weight: 800; color: #000; line-height: 1.2; }
 .active .card-header h3 { font-size: 2.2rem !important; padding-left: 45px; }
 
-.card-content { display: none; padding: 25px; order: 2; white-space: pre-wrap; font-size: 1.1rem; line-height: 1.6; }
+.card-content { display: none; padding: 25px; order: 2; white-space: pre-wrap; font-size: 1.1rem; }
 .active .card-content { display: block; }
 
-/* Imagens Padronizadas */
+/* Imagens Padronizadas no Feed */
 .card-image { order: 3; }
 .card-image img { 
     width: 100%; 
@@ -91,16 +90,21 @@ header h1 { margin: 0; font-size: 3rem; letter-spacing: 8px; font-weight: 900; }
 .active .card-image img { height: auto; max-height: 600px; }
 
 /* Responsividade */
-@media (max-width: 950px) {
+@media (max-width: 900px) {
     #blog-feed { grid-template-columns: 1fr; }
 }
 
-/* Admin Panel Styling */
-#admin-panel { background: #fff; padding: 20px; border: 2px solid #000; margin-bottom: 30px; }
-#admin-panel input, #admin-panel textarea { width: 100%; margin-bottom: 10px; padding: 10px; border: 1px solid #ccc; font-family: inherit; }
+/* Painel Admin */
+#admin-panel { background: #fff; padding: 20px; border: 2px solid #000; margin-bottom: 20px; }
+#admin-panel input, #admin-panel textarea { width: 100%; margin-bottom: 10px; padding: 10px; border: 1px solid #ccc; font-family: inherit; box-sizing: border-box; }
 
 .btn-main { width: 100%; padding: 15px; border: 2px solid #000; background: #fff; font-weight: bold; margin: 10px 0; transition: 0.2s; }
 .btn-main:hover { background: #000; color: #fff; }
+
+.admin-menu-container { position: absolute; top: 10px; right: 40px; }
+.admin-dots { font-size: 1.8rem; font-weight: bold; }
+.admin-options { display: none; position: absolute; right: 0; background: white; border: 1px solid #000; box-shadow: 5px 5px 0px #000; z-index: 100; }
+.admin-options button { width: 100%; padding: 10px; border: none; background: none; text-align: left; }
 
 footer { background: #000; color: #fff; text-align: center; padding: 40px; margin-top: auto; }
 footer a { color: #888; text-decoration: none; margin: 0 10px; }
